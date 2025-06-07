@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>구글 시트에 내용 기록하기</title>
+    <style>
+        body { font-family: sans-serif; max-width: 500px; margin: 50px auto; padding: 20px; border: 1px solid #ccc; border-radius: 10px; }
+        input[type="text"] { width: calc(100% - 22px); padding: 10px; margin-bottom: 10px; }
+        button { width: 100%; padding: 10px; background-color: #4CAF50; color: white; border: none; cursor: pointer; }
+        button:hover { background-color: #45a049; }
+        #message { margin-top: 15px; color: green; }
+    </style>
+</head>
+<body>
+
+    <h2>내용을 입력하고 전송하세요</h2>
+    <form id="myForm">
+        <input type="text" name="content" placeholder="여기에 내용 입력..." required>
+        <button type="submit">시트에 기록하기</button>
+    </form>
+    <div id="message"></div>
+
+    <script>
+        const form = document.getElementById('myForm');
+        const messageDiv = document.getElementById('message');
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // 폼의 기본 제출 동작(새로고침)을 막습니다.
+
+            // 3단계에서 복사한 웹 앱 URL을 여기에 붙여넣으세요.
+            const scriptURL = 'https://script.google.com/macros/s/AKfycbwAXIVsNTxkjLj1mDK7tdQj6McbNOnpCjj6MlWnFDsgMIqAFf0W_LMKVFYC-bKpePq4/exec';
+            
+            messageDiv.textContent = '전송 중...';
+
+            fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success!', data);
+                    messageDiv.textContent = '성공적으로 기록되었습니다!';
+                    form.reset(); // 입력창 초기화
+                    setTimeout(() => { messageDiv.textContent = ''; }, 3000); // 3초 후 메시지 사라짐
+                })
+                .catch(error => {
+                    console.error('Error!', error.message);
+                    messageDiv.textContent = '오류가 발생했습니다.';
+                });
+        });
+    </script>
+
+</body>
+</html>
